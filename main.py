@@ -34,13 +34,13 @@ def eval():
     print(f'Accuracy of the network on the 10000 test images: {100 * correct // total} %')
 
 def train():
-    for epoch in range(1):  # loop over the dataset multiple times
+    for epoch in range(100):  # loop over the dataset multiple times
 
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
             # get the inputs; data is a list of [inputs, labels]
             inputs, labels = data
-            #inputs, labels = data[0].to(device), data[1].to(device)
+            inputs, labels = data[0].to(device), data[1].to(device)
 
             # zero the parameter gradients
             optimizer.zero_grad()
@@ -65,11 +65,11 @@ if __name__ =='__main__':
 
     transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
     # --batch_size--
-    batch_size = 1
+    batch_size = 16
     # --------------
     # -----------------------------setup device----------------------------
-    # gpu_id = '1'
-    # device = torch.device("cuda:{}".format(gpu_id) if torch.cuda.is_available() else "cpu")
+    gpu_id = '1'
+    device = torch.device("cuda:{}".format(gpu_id) if torch.cuda.is_available() else "cpu")
     # ---------------------------------------------------------------------
 
     #-------------------------------------dataset_download-------------------------------------------------
@@ -85,15 +85,15 @@ if __name__ =='__main__':
 
     # --network_setup--
     net = Net()
-    # net.to(device)
+    net.to(device)
     # -----------------
 
 
     # ------------loss, optimizer, scheduler_setup--------------------
     criterion = nn.CrossEntropyLoss()
-    #optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
-    optimizer = optim.Adam(net.parameters(), lr=0.0001, weight_decay =5e-5)
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=6, gamma=0.1)
+    optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+    # optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay =5e-5)
+    # scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=6, gamma=0.1)
     # -----------------------------------------------------------------
 
 
