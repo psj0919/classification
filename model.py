@@ -3,17 +3,14 @@ import torch.nn.functional as F
 import torch
 
 
-
-
-
 class Net(nn.Module):
     def __init__(self):
         super().__init__()
         self.conv1 = nn.Conv2d(3, 6, 5)
         self.pool = nn.MaxPool2d(2, 2)
         self.conv2 = nn.Conv2d(6, 16, 5)
-        self.adp = nn.AdaptiveAvgPool2d(5)
-        self.fc1 = nn.Linear(16 * 5 * 5, 120)
+        self.adp = nn.AdaptiveAvgPool2d(5)   # 제일 flatten시키기 전 AdaptiveAvgPool2d를 사용함
+        self.fc1 = nn.Linear(16 * 5 * 5, 120) # w * h * channel
         self.fc2 = nn.Linear(120, 84)
         self.fc3 = nn.Linear(84, 10)
 

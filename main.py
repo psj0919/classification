@@ -16,6 +16,7 @@ def imshow(img):
     plt.imshow(np.transpose(npimg, (1, 2, 0)))
     plt.show()
 
+# model성능을 평가하기 위해test이라는 함수를 생성
 def eval():
 
     correct = 0
@@ -33,6 +34,7 @@ def eval():
 
     print(f'Accuracy of the network on the 10000 test images: {100 * correct // total} %')
 
+# model을 학습시키기 위해  train이라는 함수를 생성
 def train():
     for epoch in range(100):  # loop over the dataset multiple times
 
@@ -65,14 +67,15 @@ if __name__ =='__main__':
 
     transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
     # --batch_size--
-    batch_size = 16
+    batch_size = 16 # batch size 설정
     # --------------
     # -----------------------------setup device----------------------------
-    gpu_id = '1'
+    gpu_id = '1' # GPU로 학습 시키기 위해 device 설정
     device = torch.device("cuda:{}".format(gpu_id) if torch.cuda.is_available() else "cpu")
     # ---------------------------------------------------------------------
 
     #-------------------------------------dataset_download-------------------------------------------------
+    # train, test데이터셋을 다운받고 데이터를 load해옴
     trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
     testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
@@ -80,10 +83,12 @@ if __name__ =='__main__':
     # ------------------------------------------------------------------------------------------------------
 
     # ----------------------------------------classes-----------------------------------------
+    # label에 대한 class
     classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
     # -----------------------------------------------------------------------------------------
 
     # --network_setup--
+    # network 설정
     net = Net()
     net.to(device)
     # -----------------
@@ -92,22 +97,23 @@ if __name__ =='__main__':
     # ------------loss, optimizer, scheduler_setup--------------------
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
-    # optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay =5e-5)
-    # scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=6, gamma=0.1)
+    # optimizer = optim.Adam(net.parameters(), lr=0.001, weight_decay =5e-5) # optimizer를 Adam으로 변경해보기 위함
+    # scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=6, gamma=0.1) # scheduler를 추가
     # -----------------------------------------------------------------
 
 
     train()
+
+    # ./checkpoints/cifar_net.py에 weights를 저장
     path = './checkpoints/cifar_net.pth'
     torch.save(net.state_dict(), path)
-
-    dataiter = iter(testloader)
-    images, labels = next(dataiter)
+    # ------------------------------------------
 
     net = Net()
+    # 저장된 weight를 불러와서 test를 함
     net.load_state_dict(torch.load(path))
     eval()
-
+    # ------------------------------------
 
 
 
