@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 
-from model import Net
+from model import ResNet
 
 
 def imshow(img):
@@ -76,7 +76,7 @@ if __name__ =='__main__':
 
     #-------------------------------------dataset_download-------------------------------------------------
     # train, test데이터셋을 다운받고 데이터를 load해옴
-    trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
+    trainset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)   # 32*32*3
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=2)
     testset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
     testloader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=2)
@@ -89,7 +89,7 @@ if __name__ =='__main__':
 
     # --network_setup--
     # network 설정
-    net = Net()
+    net = ResNet()
     net.to(device)
     # -----------------
 
@@ -109,7 +109,7 @@ if __name__ =='__main__':
     torch.save(net.state_dict(), path)
     # ------------------------------------------
 
-    net = Net()
+    net = ResNet()
     # 저장된 weight를 불러와서 test를 함
     net.load_state_dict(torch.load(path))
     eval()
