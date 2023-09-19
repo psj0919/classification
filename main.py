@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 
-from model import ResNet
+from model import resnet18
 
 
 def imshow(img):
@@ -89,7 +89,7 @@ if __name__ =='__main__':
 
     # --network_setup--
     # network 설정
-    net = ResNet()
+    net = resnet18()
     net.to(device)
     # -----------------
 
@@ -109,7 +109,7 @@ if __name__ =='__main__':
     torch.save(net.state_dict(), path)
     # ------------------------------------------
 
-    net = ResNet()
+    net = resnet18
     # 저장된 weight를 불러와서 test를 함
     net.load_state_dict(torch.load(path))
     eval()
